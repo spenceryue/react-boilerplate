@@ -2,4 +2,7 @@
 node_modules/
 
 # Sublime
-*.sublime*
+*.sublime-workspace
+
+# Project
+dist/

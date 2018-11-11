@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "js_prettier": {
+      "debug": false,
+      "prettier_cli_path": "",
+      "node_path": "node",
+      "auto_format_on_save": true,
+      "auto_format_on_save_excludes": ["*/node_modules/*"],
+      "additional_cli_args": {},
+    }
+  }
+}
