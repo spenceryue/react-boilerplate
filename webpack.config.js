@@ -26,11 +26,8 @@ const module_option = {
               { decoratorsBeforeExport: true },
             ],
             ['@babel/plugin-proposal-class-properties', { loose: true }],
-            // Must go after decorators
-            // See example under:
-            //   https://babeljs.io/docs/en/babel-plugin-proposal-decorators#legacy
+            // Must go after plugin-proposal-decorators
             '@babel/plugin-transform-runtime',
-            'react-hot-loader/babel',
           ],
         },
       },
@@ -44,7 +41,7 @@ const module_option = {
     },
     {
       test: /\.css$/,
-      use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader'],
+      use: ['css-hot-loader', MiniCssExtractPlugin.loader, 'css-loader'],
     },
   ],
 };
@@ -82,7 +79,6 @@ const client = {
   devtool: 'cheap-module-source-map',
   // https://webpack.js.org/configuration/devtool/
   entry: {
-    react_hot_loader: 'react-hot-loader/patch',
     client: './src/client/index.js',
   },
   target: 'web',
@@ -102,8 +98,7 @@ const server = {
   devtool: 'cheap-module-source-map',
   entry: {
     server: './src/server/index.js',
-    push_data: './src/server/push_data.js',
-    utils: './src/utils/utils.js',
+    pusher: './src/server/pusher.js',
   },
   target: 'node',
   output: {

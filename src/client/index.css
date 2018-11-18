@@ -4,6 +4,7 @@ body {
   font-size: 30pt;
   background-size: 400% 400%;
   animation: gradient 15s infinite;
+  user-select: none;
 }
 
 @keyframes gradient {

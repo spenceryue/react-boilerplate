@@ -1,5 +1,5 @@
 import Pusher from 'pusher';
-import sleep from '../utils/utils';
+import { sleep } from './utils';
 
 // Enable pusher logging - don't include this in production
 // Pusher.logToConsole = true;
@@ -27,7 +27,7 @@ async function push_data() {
     }
     pusher.trigger('sine-wave', 'new-data', { data });
 
-    console.log(`${new Date().toLocaleTimeString()} New-data triggered!`, {
+    console.log(`${new Date().toLocaleTimeString()} | new-data triggered!\n`, {
       data,
     });
   }
@@ -41,8 +41,8 @@ async function* SampleData({
   const ang_freq = 2 * Math.PI * sine_freq; // radians/second
   while (true) {
     const x = Date.now() / 1000;
-    const y = Math.sin(ang_freq * (x - t0));
-    const wait = (Math.random() / _sample_rate) * 1000;
+    const y = Math.sin(ang_freq * x);
+    const wait = ((2 * Math.random()) / _sample_rate) * 1000;
     // wait this long to generate a sample
     await sleep(wait);
     yield [x, y];
