@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import style from './index.css';
 import usePusherData from './usePusherData';
 import Area from './Area';
+import { memoized } from './utils';
 
-export default function App() {
+function Placeholder(props) {
   const [state, setState] = useState({
     color: 'white',
     count: 0,
@@ -18,18 +19,23 @@ export default function App() {
     });
   };
 
+  return (
+    <div onClick={changeColor} style={{ color: state.color }}>
+      React Boilerplate!
+    </div>
+  );
+}
+
+export default function App() {
   const [PusherData, PusherContext] = usePusherData({
     key: '9dfb7224d7fd60cc9c5f',
     channel: 'sine-wave',
     event: 'new-data',
   });
-  console.log('from app:', PusherContext);
 
   return (
     <>
-      <div onClick={changeColor} style={{ color: state.color }}>
-        React Boilerplate!
-      </div>
+      <Placeholder />
       <PusherData>
         <Area context={PusherContext} />
       </PusherData>
