@@ -99,8 +99,11 @@ const client = {
 };
 
 const server = {
+  devtool: 'cheap-module-source-map',
   entry: {
     server: './src/server/index.js',
+    push_data: './src/server/push_data.js',
+    utils: './src/utils/utils.js',
   },
   target: 'node',
   output: {

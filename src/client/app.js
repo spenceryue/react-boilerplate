@@ -4,6 +4,7 @@ import style from './index.css';
 // Reloading of this is finicky.
 // Try using tutorial:
 // https://blog.cloudboost.io/live-reload-hot-module-replacement-with-webpack-middleware-d0a10a86fc80#bc80
+import './pusher';
 
 @hot(module)
 export default class App extends Component {
@@ -20,7 +21,6 @@ export default class App extends Component {
     });
   };
   render() {
-    // console.log('hi');
     return (
       <div onClick={this.changeColor} style={{ color: this.state.color }}>
         React Boilerplate!
