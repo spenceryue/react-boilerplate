@@ -6,9 +6,7 @@ Pusher.logToConsole = true;
 
 export default function usePusherData(config) {
   // Initialize local data store
-  const [store, _setStore] = useState({
-    data: [],
-  });
+  const [store, _setStore] = useState({ data: [] });
   const setStore = merging(_setStore);
 
   // Initialize React context
@@ -22,7 +20,7 @@ export default function usePusherData(config) {
   };
 
   // Set up the connection to pusher.com
-  const [pusher] = useChannel(config, setStore);
+  useChannel(config, setStore);
 
   return [PusherData, PusherContext];
 }

@@ -1,9 +1,6 @@
 import Pusher from 'pusher';
 import { sleep } from './utils';
 
-// Enable pusher logging - don't include this in production
-// Pusher.logToConsole = true;
-
 var pusher = new Pusher({
   appId: '651114',
   key: '9dfb7224d7fd60cc9c5f',
@@ -15,23 +12,6 @@ var pusher = new Pusher({
 const sample_rate = 10; // Hz
 const buf_interval = 1; // second
 const buf_size = buf_interval * sample_rate; // samples
-
-const sample_data = SampleData();
-
-async function push_data() {
-  while (true) {
-    const data = [];
-    for (const _ in [...Array(buf_size)]) {
-      const point = (await sample_data.next()).value;
-      data.push(point);
-    }
-    pusher.trigger('sine-wave', 'new-data', { data });
-
-    console.log(`${new Date().toLocaleTimeString()} | new-data triggered!\n`, {
-      data,
-    });
-  }
-}
 
 async function* SampleData({
   t0 = Date.now() / 1000, // seconds
@@ -49,4 +29,20 @@ async function* SampleData({
   }
 }
 
-push_data();
+async function main() {
+  const sample_data = SampleData();
+  while (true) {
+    const data = [];
+    for (const _ in [...Array(buf_size)]) {
+      const point = (await sample_data.next()).value;
+      data.push(point);
+    }
+    pusher.trigger('sine-wave', 'new-data', data);
+
+    console.log(`${new Date().toLocaleTimeString()} | new-data triggered!\n`, {
+      data,
+    });
+  }
+}
+
+main();
