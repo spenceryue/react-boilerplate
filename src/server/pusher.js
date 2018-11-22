@@ -17,12 +17,14 @@ async function* SampleData({
   t0 = Date.now() / 1000, // seconds
   sine_freq = 1, // Hz
   _sample_rate = sample_rate, // Hz
+  random = false,
 } = {}) {
+  random = random ? Math.random : () => 1;
   const ang_freq = 2 * Math.PI * sine_freq; // radians/second
   while (true) {
-    const x = Date.now() / 1000;
+    const x = Date.now() / 1000; // seconds
     const y = Math.sin(ang_freq * x);
-    const wait = ((2 * Math.random()) / _sample_rate) * 1000;
+    const wait = ((2 * random()) / _sample_rate) * 1000;
     // wait this long to generate a sample
     await sleep(wait);
     yield [x, y];
@@ -32,16 +34,17 @@ async function* SampleData({
 async function main() {
   const sample_data = SampleData();
   while (true) {
-    const data = [];
+    const payload = [];
     for (const _ in [...Array(buf_size)]) {
       const point = (await sample_data.next()).value;
-      data.push(point);
+      payload.push(point);
     }
-    pusher.trigger('sine-wave', 'new-data', data);
+    pusher.trigger('sine-wave', 'new-data', { payload });
 
-    console.log(`${new Date().toLocaleTimeString()} | new-data triggered!\n`, {
-      data,
-    });
+    console.log(
+      `${new Date().toLocaleTimeString()} | new-data triggered!\n`,
+      payload
+    );
   }
 }
 

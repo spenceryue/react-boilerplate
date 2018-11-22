@@ -27,18 +27,25 @@ function Placeholder(props) {
 }
 
 export default function App() {
-  const [PusherData, PusherContext] = usePusherData({
+  const [PusherData, PusherContext, store] = usePusherData({
     key: '9dfb7224d7fd60cc9c5f',
     channel: 'sine-wave',
     event: 'new-data',
   });
 
+  if (window.PusherContext === PusherContext) console.warn('OK!');
+  else console.warn('nooooo');
+
   return (
     <>
       <Placeholder />
-      <PusherData>
-        <Area context={PusherContext} />
+      <PusherData value={store}>
+        <Area context={PusherContext} data={store.data} />
       </PusherData>
     </>
   );
+  /*
+      <window.PusherContext.Provider value={store}>
+      </window.PusherContext.Provider>
+   */
 }

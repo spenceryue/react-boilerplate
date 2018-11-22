@@ -3,26 +3,38 @@ import React, { useState, useEffect, createContext } from 'react';
 import { merging } from './utils';
 // Enable pusher logging - don't include this in production
 Pusher.logToConsole = true;
-
+window.count = 0;
 export default function usePusherData(config) {
   // Initialize local data store
   const [store, _setStore] = useState({ data: [] });
   const setStore = merging(_setStore);
 
   // Initialize React context
-  const [PusherContext] = useState(() => React.createContext());
+  // const [PusherContext] = useState(() => {
+  const [[PusherContext, PusherProvider]] = useState(() => {
+    console.log(window.count++);
+    // return (window.PusherContext = React.createContext());
+    const context = (window.PusherContext = React.createContext());
+    return [context, context.Provider];
+  });
+  if (window.PusherContext === PusherContext) console.warn('OK!');
+  else console.warn('nooooo');
 
   // Create React Context.Provider component
-  const PusherData = ({ children }) => {
+  const [PusherData] = useState(() => ({ children }) => {
     return (
-      <PusherContext.Provider value={store}>{children}</PusherContext.Provider>
+      // <PusherProvider>{children}</PusherProvider>
+      <PusherContext.Provider>{children}</PusherContext.Provider>
+      // <PusherContext.Provider value={store}>{children}</PusherContext.Provider>
     );
-  };
+    // return <div value={store}>{children}</div>;
+  });
 
   // Set up the connection to pusher.com
   useChannel(config, setStore);
 
-  return [PusherData, PusherContext];
+  return [PusherData, PusherContext, store];
+  // return [PusherProvider, PusherContext, store];
 }
 
 // TODO: Validate arguments (ensure not undefined)
@@ -46,10 +58,10 @@ export function useChannel(
   // Subscribe to new incoming Pusher store
   useEffect(() => {
     const channel = pusher.subscribe(channelName);
-    const handleNewData = latestData => {
-      latestData = JSON.stringify(latestData);
+    const handleNewData = ({ payload }) => {
+      console.log(payload);
       setStore(store => ({
-        data: store.data.concat(latestData),
+        data: store.data.concat(payload),
       }));
     };
     channel.bind(eventName, handleNewData);
